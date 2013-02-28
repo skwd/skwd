@@ -4,9 +4,9 @@ from ftplib import FTP
 from sys import argv
 import nmap
 
-def scanftp():
+def scanftp(host,port):
 	nm = nmap.PortScanner()
-	nm.scan(argv[1],"21")
+	nm.scan(host,port)
 	ip = []
 	for i in nm.all_hosts():
 		if nm[i]['tcp'][21]['state'] == 'open':
@@ -19,15 +19,15 @@ def connectftp(ip):
 			ftp = FTP(i)
 			ftp.login()
 			anncon.append(i)
+			print ftp.getwelcome() + " <------- " + i
 		except:
 			pass
 	return anncon
 
 def main():
-	ip = scanftp()
+	ip = scanftp(argv[1],"21")
 	anocon = connectftp(ip)
-	for i in anocon:
-		print i	
+
 if __name__=="__main__":
 	main()
 
