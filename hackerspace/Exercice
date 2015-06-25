@@ -1,0 +1,10 @@
+1) Extraire Mot de passe FTP automatiquement avec scapy
+2) Extraire les A record query
+3) mapper un Trace Route
+4) mapper un packet
+5) mapper les conversations
+arping("192.168.69.0/24")
+
+
+
+

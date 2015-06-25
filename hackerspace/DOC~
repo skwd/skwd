@@ -1,0 +1,84 @@
+#Install requirement on ubuntu
+sudo apt-get install python-pandas
+sudo apt-get install python-scapy
+sudo apt-get install python-pyX
+sudo apt-get install gnuplot
+sudo apt-get install python-gnuplot
+
+
+#doc 
+http://www.secdev.org/projects/scapy/files/scapydoc.pdf
+http://openclassrooms.com/courses/manipulez-les-paquets-reseau-avec-scapy
+http://www.cloudshield.com/blog/dns-security-expert-series/simple-and-powerful-testing-with-scapy-part-ii/
+
+# Scapy cheatsheet
+http://packetlife.net/media/library/36/scapy.pdf
+
+# Navigation 
+ls(IP)
+
+# Read Pcap
+a=rdpcap("DNS.pcap")
+
+# forger un packet 
+pkt = Ether()
+pkt.show()
+
+ping = Ether() / IP(dst='192.168.69.1') / ICMP()
+ping = IP(dst="192.168.69.1")/ICMP()/Raw(load="mmmmmm ping")
+
+# send dns packet 
+sr1(IP(dst="8.8.8.8")/UDP()/DNS(rd=1,qd=DNSQR(qname="www.hackfest.ca")))
+sr(IP(dst="8.8.8.8")/UDP()/DNS(rd=1,qd=DNSQR(qname=RandNum(0,1) + ".hackfest.ca")))
+sr(IP(dst="192.168.69.1")/TCP(dport=[21,22,23]))
+
+# Sniff
+sniff(filter="dns", count=10)
+sniff(iface="eth0", prn=lambda x: x.summary())
+pkts = sniff(prn=lambda x:x.sprintf("{IP:%IP.src% -> %IP.dst%\n}{Raw:%Raw.load%\n}"))
+wrpcap("/tmp/write1.pcap",pkts)
+
+# lamda function 
+test = (1,2,3,4,5,6,7,8,9)
+test2 = filter(lambda x: x % 2 == 0, test)
+print test2
+(2, 4, 6, 8)
+
+pkt.filter(lambda x: True if (TCP in x) or (UDP in x) and x.dport==53 else False)
+
+#geo Ip
+https://github.com/cudeso/ulogd-viz/raw/master/library/geoipdb.dat
+http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip
+
+#ip reputation alienvault 
+https://reputation.alienvault.com/reputation.generic
+https://gist.github.com/bsmartt13/efa02c40ea12c09d9c3a
+http://www.malwaredomainlist.com/hostslist/hosts.txt
+[FunBad.py]
+
+
+## Graphique ## 
+# Plot 
+p[423].pdfdump(layer_shift=1)
+p[423].psdump("/tmp/isakmp_pkt.eps",layer_shift=1)
+
+a,b=sr( IP(dst="target")/TCP(sport=[RandShort()]*1000) )
+a.plot(lambda (s,r): r.id)
+
+# graph un traceroute 
+ans, unans = traceroute(["8.8.8.8"])
+ans.graph
+
+# Conversation 
+pkt.conversations()
+
+
+## Other #
+wireshark(pkt) # Ouvre wireshark avec les packets
+
+# replay packets 
+pkts=rdpcap(“/tmp/attack.pcap”)
+for pkt in pkts:
+    send(pkt)
+
+
