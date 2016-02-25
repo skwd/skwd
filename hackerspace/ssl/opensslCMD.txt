@@ -1,0 +1,13 @@
+https://www.sslshopper.com/article-most-common-openssl-commands.html
+
+#Generate Private key
+openssl genrsa -out www.sherweb.com.key 2048
+#Create a CSR
+openssl req -new -sha256 -key www.sherweb.com.key -out www.sherweb.com.csr
+#Check a Certificate Signing Request (CSR)
+openssl req -text -noout -verify -in www.sherweb.com.csr
+#Check a certificate
+openssl x509 -in certificate.crt -text -noout
+
+#get remote server certificate in PEM encoding
+openssl s_client -showcerts -connect www.sherweb.com:443
